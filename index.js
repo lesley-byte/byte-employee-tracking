@@ -32,6 +32,8 @@ const questions = [
 
 // TODO: Create a function to write to the Database
 
+// TODO: Create a function to delete from the Database
+
 // TODO: Create a function to initialize app
 
 // TODO: Function call to initialize app
