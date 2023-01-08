@@ -1,0 +1,23 @@
+{
+  "name": "byte-employee-tracking",
+  "version": "1.0.0",
+  "description": "A template for new coding bootcamp projects to make setup faster and easier.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lesley-byte/byte-employee-tracking.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lesley-byte/byte-employee-tracking/issues"
+  },
+  "homepage": "https://github.com/lesley-byte/byte-employee-tracking#readme",
+  "dependencies": {
+    "inquirer": "^8.2.4"
+  }
+}
