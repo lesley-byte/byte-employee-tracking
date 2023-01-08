@@ -4,6 +4,8 @@ const fs = require("fs");
 const mysql = require("mysql2");
 // include generateDatabase.js file in utils folder
 const viewData = require("./utils/viewData");
+const { clog } = require("./middleware/clog");
+
 // Create an array of questions for user input
 // first question is a set of choices for the user to choose from
 const questions = [
