@@ -28,3 +28,5 @@ CREATE TABLE employee (
     REFERENCES employee(emp_id)
     ON DELETE NO ACTION,
 )
+
+
