@@ -71,6 +71,59 @@ function viewTotalUtilizedBudget() {
     console.log("Viewing the total utilized budget of a department");
     };
 
+// TODO: Create a function that will use a switch statement to call the appropriate function
+function menu() {
+    console.log("Menu");
+    var menuSelection = inquirer.prompt(questions);
+    switch (menuSelection) {
+        case "View all departments?":
+            viewAllDepartments();
+            break;
+        case "View all roles?":
+            viewAllRoles();
+            break;
+        case "View all employees?":
+            viewAllEmployees();
+            break;
+        case "Add a department?":
+            addDepartment();
+            break;
+        case "Add a role?":
+            addRole();
+            break;
+        case "Add an employee?":
+            addEmployee();
+
+            break;
+        case "Update an employee role?":
+            updateEmployeeRole();
+            break;
+        case "Update employee managers?":
+            updateEmployeeManager();
+            break;
+        case "View employees by manager?":
+            viewEmployeesByManager();
+            break;
+        case "View employees by department?":
+            viewEmployeesByDepartment();
+            break;
+        case "Delete departments?":
+            deleteDepartment();
+            break;
+        case "Delete roles?":
+            deleteRole();
+            break;
+        case "Delete employees?":
+            deleteEmployee();
+            break;
+        case "View the total utilized budget of a department?":
+            viewTotalUtilizedBudget();
+            break;
+        default:
+            console.log("Please select an option from the menu");
+    }
+    };
+
 module.exports = {
     viewAllDepartments,
     viewAllRoles,
@@ -85,5 +138,6 @@ module.exports = {
     deleteDepartment,
     deleteRole,
     deleteEmployee,
-    viewTotalUtilizedBudget
+    viewTotalUtilizedBudget,
+    menu
 };

@@ -3,7 +3,7 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 const mysql = require("mysql2");
 // include generateDatabase.js file in utils folder
-const generateDatabase = require("./utils/generateDatabase");
+const viewData = require("./utils/viewData");
 // Create an array of questions for user input
 // first question is a set of choices for the user to choose from
 const questions = [
