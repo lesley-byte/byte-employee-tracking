@@ -1,3 +1,4 @@
+const inquirer = require("inquirer");
 // TODO: Create a function that will console.table the data from all departments
 function viewAllDepartments() {
   console.log("Viewing all departments");
@@ -73,9 +74,34 @@ function viewTotalUtilizedBudget() {
 
 // TODO: Create a function that will use a switch statement to call the appropriate function
 function menu() {
-    console.log("Menu");
-    var menuSelection = inquirer.prompt(questions);
-    switch (menuSelection) {
+    const questions = () => {
+        return inquirer.prompt([
+      {
+        type: "checkbox",
+        name: "menu",
+        message: "Select an option from the menu below:",
+        choices: [
+          "View all departments?",
+          "View all roles?",
+          "View all employees?",
+          "Add a department?",
+          "Add a role?",
+          "Add an employee?",
+          "Update an employee role?",
+          "Update employee managers?",
+          "View employees by manager?",
+          "View employees by department?",
+          "Delete departments?",
+          "Delete roles?",
+          "Delete employees?",
+          "View the total utilized budget of a department?",
+        ],
+      },
+    ]
+        )
+        .then((data) => {
+            console.log(data.menu[0])
+            switch (data.menu[0]) {
         case "View all departments?":
             viewAllDepartments();
             break;
@@ -121,8 +147,13 @@ function menu() {
             break;
         default:
             console.log("Please select an option from the menu");
+            break;
     }
-    };
+        })
+    }
+    questions();
+};
+
 
 module.exports = {
     viewAllDepartments,
