@@ -1,18 +1,20 @@
--- join employee.emp_id to employee.manager_id
--- join employee.role_id to role.role_id
--- join role.dept_id to department.dept_id
 SELECT 
-    employee.emp_id,
+    employee.id,
     employee.first_name,
     employee.last_name,
-    role.title,
+    roles.title,
     department.dept_name,
-    role.salary,
-    CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+    roles.salary,
+    employee.manager_id,
+    CONCAT(m.first_name, m.last_name) as manager
+
 FROM employee
-LEFT JOIN role
-    ON employee.role_id = role.role_id
+LEFT JOIN roles
+    ON employee.role_id = roles.id
 LEFT JOIN department
-    ON role.dept_id = department.dept_id
-LEFT JOIN employee manager
-    ON employee.manager_id = manager.emp_id;
+    ON roles.dept_id = department.id
+LEFT JOIN employee as e
+	ON employee.id = e.manager_id
+LEFT JOIN employee as m
+    ON employee.manager_id = m.id
+ORDER BY employee.id;
