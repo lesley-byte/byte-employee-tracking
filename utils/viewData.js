@@ -33,7 +33,7 @@ console.log(`Server running on port ${PORT}`);
 function viewAllDepartments() {
   console.log("Viewing all departments");
   // query the database for all departments
-    db.query("SELECT * FROM department", function (err, res) {
+    db.query("SELECT * FROM department;", function (err, res) {
         if (err) throw err;
         // Log all results of the SELECT statement
         console.table(res);
@@ -45,26 +45,59 @@ function viewAllDepartments() {
 // TODO: Create a function that will console.table the data from all roles
 function viewAllRoles() {
     console.log("Viewing all roles");
+    db.query("SELECT * FROM roles;", function (err, res) {
+        if (err) throw err;
+        // Log all results of the SELECT statement
+        console.table(res);
+        // connection.end();))
+    });
     };
 
 // TODO: Create a function that will console.table the data from all employees
 function viewAllEmployees() {
     console.log("Viewing all employees");
+    db.query("SELECT * FROM employee;", function (err, res) {
+        if (err) throw err;
+        // Log all results of the SELECT statement
+        console.table(res);
+        // connection.end();
+        });
     };
 
 // TODO: Create a function that will add a department to the database
 function addDepartment() {
     console.log("Adding a department");
+    db.query("INSERT INTO department SET ?", { name: "Sales" }, function (err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows + " department inserted!\n");
+        // Call updateProduct AFTER the INSERT completes
+        // updateProduct();
+        viewAllDepartments();
+        });
     };
 
 // TODO: Create a function that will add a role to the database
 function addRole() {
     console.log("Adding a role");
+    db.query("INSERT INTO roles SET ?", { title: "Sales Manager", salary: 100000, department_id: 1 }, function (err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows + " role inserted!\n");
+        // Call updateProduct AFTER the INSERT completes
+        // updateProduct();
+        viewAllRoles();
+        });
     };
 
 // TODO: Create a function that will add an employee to the database
 function addEmployee() {
     console.log("Adding an employee");
+    db.query("INSERT INTO employee SET ?", { first_name: "John", last_name: "Doe", role_id: 1, manager_id: 1 }, function (err, res) {
+        if (err) throw err;
+        console.log(res.affectedRows + " employee inserted!\n");
+        // Call updateProduct AFTER the INSERT completes
+        // updateProduct();
+        viewAllEmployees();
+        });
     };
 
 // TODO: Create a function that will update an employee's role
