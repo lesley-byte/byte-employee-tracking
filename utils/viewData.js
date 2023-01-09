@@ -1,7 +1,45 @@
+const express = require('express');
 const inquirer = require("inquirer");
+const mysql = require("mysql2");
+
+const PORT = process.env.PORT || 3001;
+const app = express();
+
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+const db = mysql.createConnection(
+    {
+      host: 'localhost',
+      // MySQL username,
+      user: 'root',
+      // MySQL password
+      password: 'password',
+      database: 'employees_db'
+    },
+    console.log(`Connected to the employees_db database.`)
+  );
+app.use((req, res) => {
+res.status(404).end();
+});
+
+app.listen(PORT, () => {
+console.log(`Server running on port ${PORT}`);
+});
+
+
 // TODO: Create a function that will console.table the data from all departments
 function viewAllDepartments() {
   console.log("Viewing all departments");
+  // query the database for all departments
+    db.query("SELECT * FROM department", function (err, res) {
+        if (err) throw err;
+        // Log all results of the SELECT statement
+        console.table(res);
+        // connection.end();
+        });
+
 };
 
 // TODO: Create a function that will console.table the data from all roles

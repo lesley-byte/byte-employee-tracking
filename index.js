@@ -6,8 +6,6 @@ const mysql = require("mysql2");
 const viewData = require("./utils/viewData");
 const { clog } = require("./middleware/clog");
 
-
-
 // TODO: Create a function to write to the Database
 
 // TODO: Create a function to delete from the Database
