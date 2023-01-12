@@ -205,20 +205,39 @@ function viewEmployeesByManager() {
     console.log("Viewing employees by manager");
     const questions7 = () => {
         return inquirer.prompt([
-        { type: "input", name: "manager_id", message: "What is the manager id of the employee?" },
+        { type: "input", name: "first_name", message: "What is the first name of the manager?" },
+        { type: "input", name: "last_name", message: "What is the last name of the manager?" }
     ])
     .then((answers) => {
         console.log(answers);
-        db.query('SELECT * FROM employee WHERE ?', { manager_id: answers.manager_id }, function (err, res) {
+        db.query(`SELECT 
+        employee.id,
+        employee.first_name,
+        employee.last_name,
+        roles.title,
+        department.dept_name,
+        roles.salary,
+        employee.manager_id,
+        CONCAT(m.first_name, m.last_name) as manager
+    
+    FROM employee
+    LEFT JOIN roles
+        ON employee.role_id = roles.id
+    LEFT JOIN department
+        ON roles.dept_id = department.id
+    LEFT JOIN employee as e
+        ON employee.id = e.manager_id
+    LEFT JOIN employee as m
+        ON employee.manager_id = m.id
+    WHERE m.first_name = ? AND m.last_name = ?`, [answers.first_name, answers.last_name], function (err, res) {
             if (err) throw err;
-            // Log all results of the SELECT statement
             console.table(res);
-            // connection.end();
             });
         });
     };
     questions7();
     };
+
  
 // TODO: Create a function that will view employees by department
 function viewEmployeesByDepartment() {
@@ -231,28 +250,30 @@ function viewEmployeesByDepartment() {
     .then((answers) => {
         console.log(answers);
 // first db.query gets the department id from the department name
-        db.query('SELECT id FROM department WHERE ?', { dept_name: answers.department_name }, function (err, res) {
+        db.query(`SELECT employee.id,
+        employee.first_name,
+        employee.last_name,
+        roles.title,
+        department.dept_name,
+        roles.salary,
+        employee.manager_id,
+        CONCAT(m.first_name, m.last_name) as manager
+    
+    FROM employee
+    LEFT JOIN roles
+        ON employee.role_id = roles.id
+    LEFT JOIN department
+        ON roles.dept_id = department.id
+    LEFT JOIN employee as e
+        ON employee.id = e.manager_id
+    LEFT JOIN employee as m
+        ON employee.manager_id = m.id
+    WHERE dept_name = ?`, [answers.department_name ], function (err, res) {
             if (err) throw err;
             // Log all results of the SELECT statement
-            console.log("")
-            console.log(res);
-            var tempDeptId = res.id;
+            console.table(res);
             // connection.end();
-            db.query('SELECT id FROM roles WHERE ?', { dept_id: tempDeptId }, function (err, res) {
-                if (err) throw err;
-                // Log all results of the SELECT statement
-                console.log(res);
-                // connection.end();
-                db.query('SELECT * FROM employee WHERE ?', { role_id: res.role_id }, function (err, res) {
-                    if (err) throw err;
-                    // Log all results of the SELECT statement
-                    console.log(res);
-                    // connection.end();
-                    });
-                });
             });
-// second db.query gets the roles from the department id and stores them in an array and then gets all the employees from the array of roles
-
         });
     };
     questions8();
