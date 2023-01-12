@@ -39,8 +39,6 @@ function viewAllDepartments() {
     console.log("-----------------");
     console.table(res);
     console.log("-----------------");
-    console.log("running is: " + running);
-    console.log("running is: " + running);
     // connection.end();
   });
 }
