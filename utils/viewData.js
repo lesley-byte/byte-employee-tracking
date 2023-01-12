@@ -1,14 +1,14 @@
 const express = require("express");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-
+const logo = require('asciiart-logo');
+// const artConfig = require('./package.json');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 const db = mysql.createConnection(
   {
     host: "localhost",
@@ -30,14 +30,17 @@ app.listen(PORT, () => {
 
 // TODO: Create a function that will console.table the data from all departments
 function viewAllDepartments() {
-  console.log("Viewing all departments");
+  console.log("Viewing all departments: ");
   // query the database for all departments
   db.query("SELECT * FROM department;", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
+    console.clear();
     console.log("-----------------");
     console.table(res);
     console.log("-----------------");
+    console.log("running is: " + running);
+    console.log("running is: " + running);
     // connection.end();
   });
 }
@@ -48,6 +51,7 @@ function viewAllRoles() {
   db.query("SELECT * FROM roles;", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
+    console.clear();
     console.log("-----------------");
     console.table(res);
     console.log("-----------------");
@@ -61,6 +65,7 @@ function viewAllEmployees() {
   db.query("SELECT * FROM employee;", function (err, res) {
     if (err) throw err;
     // Log all results of the SELECT statement
+    console.clear();
     console.log("-----------------");
     console.table(res);
     console.log("-----------------");
@@ -94,13 +99,18 @@ function addDepartment() {
           { dept_name: answers.name },
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " department inserted!\n");
             // Call updateProduct AFTER the INSERT completes
             // updateProduct();
-            viewAllDepartments();
+        
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Department added!");
+        })
+        .catch((err) => console.log(err))
   };
   newDepartment();
 }
@@ -138,10 +148,11 @@ function addRole() {
           },
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " role inserted!\n");
             // Call updateProduct AFTER the INSERT completes
             // updateProduct();
-            viewAllRoles();
+  
           }
         );
       });
@@ -188,10 +199,11 @@ function addEmployee() {
           },
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " employee inserted!\n");
             // Call updateProduct AFTER the INSERT completes
             // updateProduct();
-            viewAllEmployees();
+
           }
         );
       });
@@ -229,8 +241,9 @@ function updateEmployeeRole() {
           [answers.role_id, answers.first_name, answers.last_name],
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " employee updated!\n");
-            viewAllEmployees();
+
           }
         );
       });
@@ -267,10 +280,11 @@ function updateEmployeeManager() {
           [answers.manager_id, answers.first_name, answers.last_name],
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " employee updated!\n");
             // Call deleteProduct AFTER the UPDATE completes
             // deleteProduct();
-            viewAllEmployees();
+ 
           }
         );
       });
@@ -321,6 +335,7 @@ function viewEmployeesByManager() {
           [answers.first_name, answers.last_name],
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.table(res);
           }
         );
@@ -368,6 +383,7 @@ function viewEmployeesByDepartment() {
           function (err, res) {
             if (err) throw err;
             // Log all results of the SELECT statement
+            console.clear();
             console.table(res);
             // connection.end();
           }
@@ -396,10 +412,11 @@ function deleteDepartment() {
           { dept_name: answers.name },
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " department deleted!\n");
             // Call readProducts AFTER the DELETE completes
             // readProducts();
-            viewAllDepartments();
+
           }
         );
       });
@@ -426,10 +443,11 @@ function deleteRole() {
           { title: answers.title },
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " role deleted!\n");
             // Call readProducts AFTER the DELETE completes
             // readProducts();
-            viewAllRoles();
+
           }
         );
       });
@@ -460,10 +478,11 @@ function deleteEmployee() {
           [answers.first_name, answers.last_name],
           function (err, res) {
             if (err) throw err;
+            console.clear();
             console.log(res.affectedRows + " employee deleted!\n");
             // Call readProducts AFTER the DELETE completes
             // readProducts();
-            viewAllEmployees();
+
           }
         );
       });
@@ -504,6 +523,7 @@ function viewTotalUtilizedBudget() {
           function (err, res) {
             if (err) throw err;
             // Log all results of the SELECT statement
+            console.clear();
             console.table(res);
             // connection.end();
           }
@@ -515,11 +535,26 @@ function viewTotalUtilizedBudget() {
 
 // TODO: Create a function that will use a switch statement to call the appropriate function
 function menu() {
+    console.clear();
+
+console.log(
+    logo({
+        name: 'Employee Tracker',
+        font: 'Bloody',
+        lineChars: 10,
+        padding: 2,
+        margin: 3,
+        borderColor: 'bold-white',
+        logoColor: 'bold-magenta',
+        textColor: 'green',
+    })
+    .render()
+);
   const questions = () => {
     return inquirer
       .prompt([
         {
-          type: "checkbox",
+          type: "list",
           name: "menu",
           message: "Select an option from the menu below:",
           choices: [
@@ -542,76 +577,65 @@ function menu() {
         },
       ])
       .then((data) => {
-        console.log(data.menu[0]);
-        switch (data.menu[0]) {
+        console.log(data.menu);
+        let running = false;
+        switch (data.menu) {
           case "View all departments?":
             viewAllDepartments();
-            questions()
             break;
           case "View all roles?":
             viewAllRoles();
-            questions()
             break;
           case "View all employees?":
             viewAllEmployees();
-            questions()
             break;
           case "Add a department?":
             addDepartment();
-            questions()
             break;
           case "Add a role?":
             addRole();
-            questions()
             break;
           case "Add an employee?":
             addEmployee();
-            questions()
             break;
           case "Update an employee role?":
             updateEmployeeRole();
-            questions()
             break;
           case "Update employee managers?":
             updateEmployeeManager();
-            questions()
             break;
           case "View employees by manager?":
             viewEmployeesByManager();
-            questions()
             break;
           case "View employees by department?":
             viewEmployeesByDepartment();
-            questions()
             break;
           case "Delete departments?":
             deleteDepartment();
-            questions()
             break;
           case "Delete roles?":
             deleteRole();
-            questions()
             break;
           case "Delete employees?":
             deleteEmployee();
-            questions()
             break;
           case "View the total utilized budget of a department?":
             viewTotalUtilizedBudget();
-            questions()
             break;
             case "Exit":
-                connection.end();
+                db.end();
                 break;
           default:
-            console.log("Please select an option from the menu");
-            questions()
+            console.log("-------------------------");
             break;
         }
       });
-  };
-//   Call the function in a loop so that the user can keep selecting options until they exit but wait for the user to press enter before calling the function again
-    questions();  
+    };
+    questions();
+    // make a promise to wait for the user to select an option from the menu
+    // then call questions() again until the user selects the exit option
+    // if the user selects the exit option, then call connection.end()
+    
 }
 
 module.exports = {
