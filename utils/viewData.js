@@ -355,12 +355,22 @@ function viewTotalUtilizedBudget() {
   // ask the user which department they would like to view the total utilized budget of
     const questions12 = () => {
         return inquirer.prompt([
-        { type: "input", name: "department_id", message: "Which department id would you like to view the total utilized budget of?" },
+        { type: "input", name: "department_name", message: "Which department would you like to view the total utilized budget of?" },
     ])
     .then((answers) => {
         console.log(answers);
         
-        db.query('SELECT SUM(salary) FROM employee WHERE ?', { dept_id: answers.department_id }, function (err, res) {
+// first db.query gets views all employees in the department and then adds up the salaries
+        db.query(`SELECT SUM(salary) as total_budget FROM employee 
+        LEFT JOIN roles
+    ON employee.role_id = roles.id
+LEFT JOIN department
+    ON roles.dept_id = department.id
+LEFT JOIN employee as e
+	ON employee.id = e.manager_id
+LEFT JOIN employee as m
+    ON employee.manager_id = m.id
+WHERE dept_name = ?`, [answers.department_name], function (err, res) {
             if (err) throw err;
             // Log all results of the SELECT statement
             console.table(res);
@@ -370,6 +380,7 @@ function viewTotalUtilizedBudget() {
     };
     questions12();
     };
+
 
 // TODO: Create a function that will use a switch statement to call the appropriate function
 function menu() {
