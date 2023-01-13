@@ -1,52 +1,56 @@
-# bootcampProjectTemplate
+# Byte-Employee-Tracker
 
 ## Description
 
-A template for new coding bootcamp projects to make setup faster and easier.
+A command-line node.js application that allows the user to view, add, update, and delete employees, roles, and departments in a mysql database. Additionally it allows the user to view the total utilized budget of a department.
+
+## Table of Contents
+
+- [Description](#description)
+- [Usage](#usage)
+- [Link to video of node.js application](#link-to-video-of-node.js-application)
+- [Screenshot](#screenshot)
+- [Testing](#testing)
+- [License](#license)
+- [Questions](#questions)
+- [Credits](#credits)
 
 ## Usage
 
-Use this when starting a new project.  It will create a directory structure and a README.md file with some basic information.
+To use this application, the user must first install the required dependencies by running the following command in the terminal:
 
-## Link to Deployed Application
-[Deployed Application]()
+```bash
+npm i
+```
+
+Then the user must run the following command to start the application:
+
+```bash
+node index.js
+```
+
+## Link to video of node.js application
+
+[Video of application in action](https://drive.google.com/file/d/1qhsgOx-Xocbte55WEcGl6aXDUw5k_Cx0/view)
 
 ## Screenshot
+
 ![Screenshot](./assets/images/screenshot.png)
 
 ## Testing
 
-Check if its up to date occasionally
+I have not yet written any tests for this application.
 
 ## License
 
-Mit License
-
-## Badges
-![bootcamp Education](https://img.shields.io/badge/bootcamp-Education-red)
-
-![JQuery Project](https://img.shields.io/badge/JQuery-Project-ff69b4)
-
-![codestyle: standard](https://badgen.net/badge/code%20style/standard/f2a)
-
-[![forthebadge](https://forthebadge.com/images/badges/contains-17-coffee-cups.svg)](https://forthebadge.com)
-
-[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
-
-![badge](https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
-
-[![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
-
-![prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)
-
-![badge](https://img.shields.io/badge/GIT-E44C30?style=for-the-badge&logo=git&logoColor=white)
-
-![Jquery](https://img.shields.io/badge/Jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)
-
 ![mit](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-![bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)
+Mit License
 
-## Contributing
+## Questions
+
+If you have any questions about the repo, open an issue or contact me directly at [phosphorescence3@hotmail.com](mailto:phosphorescence3@hotmail.com). You can find more of my work at [lesley-byte](https://github.com/lesley-byte) on github.
 
 ## Credits
+
+I would like to thank my tutor, my classmates, and my instructor for their help and support.
