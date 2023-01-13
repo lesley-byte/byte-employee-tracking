@@ -1,9 +1,8 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-const logo = require('asciiart-logo');
+const logo = require("asciiart-logo");
 // const artConfig = require('./package.json');
 const PORT = process.env.PORT || 3001;
-
 
 const db = mysql.createConnection(
   {
@@ -97,15 +96,14 @@ function addDepartment() {
             console.log(res.affectedRows + " department inserted!\n");
             // Call updateProduct AFTER the INSERT completes
             // updateProduct();
-        
           }
         );
       })
       .then(() => {
         console.log("Department added!");
         menu();
-        })
-        .catch((err) => console.log(err))
+      })
+      .catch((err) => console.log(err));
   };
   newDepartment();
 }
@@ -117,7 +115,7 @@ function addRole() {
     if (err) throw err;
     // assign the results to a variable that can be used in the inquirer prompt
     const departments = res;
-   
+
     const questions3 = () => {
       return inquirer
         .prompt([
@@ -156,15 +154,14 @@ function addRole() {
               console.log(res.affectedRows + " role inserted!\n");
               // Call updateProduct AFTER the INSERT completes
               // updateProduct();
-    
             }
           );
         })
         .then(() => {
           console.log("Role added!");
           menu();
-          })
-          .catch((err) => console.log(err))
+        })
+        .catch((err) => console.log(err));
     };
     questions3();
   });
@@ -183,68 +180,67 @@ function addEmployee() {
       // assign the results to a variable that can be used in the inquirer prompt
       const managers = res;
 
-  const questions4 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "first_name",
-          message: "What is the first name of the employee?",
-        },
-        {
-          type: "input",
-          name: "last_name",
-          message: "What is the last name of the employee?",
-        },
-        {
-          type: "list",
-          name: "role_id",
-          message: "What is the role of the employee?",
-          choices: roles.map((role) => ({
-            name: role.title,
-            value: role.id,
-          })),
-        },
-        {
-          type: "list",
-          name: "manager_id",
-          message: "Who is the manager of the employee?",
-          choices: managers.map((manager) => ({
-            name: (manager.first_name + " " + manager.last_name),
-            value: manager.id,
-          })),
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          "INSERT INTO employee SET ?",
-          {
-            first_name: answers.first_name,
-            last_name: answers.last_name,
-            role_id: answers.role_id,
-            manager_id: answers.manager_id,
-          },
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " employee inserted!\n");
-            // Call updateProduct AFTER the INSERT completes
-            // updateProduct();
+      const questions4 = () => {
+        return inquirer
+          .prompt([
+            {
+              type: "input",
+              name: "first_name",
+              message: "What is the first name of the employee?",
+            },
+            {
+              type: "input",
+              name: "last_name",
+              message: "What is the last name of the employee?",
+            },
+            {
+              type: "list",
+              name: "role_id",
+              message: "What is the role of the employee?",
+              choices: roles.map((role) => ({
+                name: role.title,
+                value: role.id,
+              })),
+            },
+            {
+              type: "list",
+              name: "manager_id",
+              message: "Who is the manager of the employee?",
+              choices: managers.map((manager) => ({
+                name: manager.first_name + " " + manager.last_name,
+                value: manager.id,
+              })),
+            },
+          ])
+          .then((answers) => {
+            console.log(answers);
+            db.query(
+              "INSERT INTO employee SET ?",
+              {
+                first_name: answers.first_name,
+                last_name: answers.last_name,
+                role_id: answers.role_id,
+                manager_id: answers.manager_id,
+              },
+              function (err, res) {
+                if (err) throw err;
+                console.clear();
+                console.log(res.affectedRows + " employee inserted!\n");
+                // Call updateProduct AFTER the INSERT completes
+                // updateProduct();
+              }
+            );
+          })
+          .then(() => {
+            console.log("Employee added!");
+            menu();
+          })
+          .catch((err) => console.log(err));
+      };
 
-          }
-        );
-      })
-      .then(() => {
-        console.log("Employee added!");
-        menu();
-        })
-        .catch((err) => console.log(err))
-  };
-  
-  questions4();
-});
-});
+      questions4();
+    });
+  });
 }
 
 // TODO: Create a function that will update an employee's role
@@ -259,51 +255,50 @@ function updateEmployeeRole() {
       // assign the results to a variable that can be used in the inquirer prompt
       const roles = res;
 
-  const questions5 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "employee_id",
-          message: "What is the name of the employee?",
-          choices: employees.map((employee) => ({
-            name: (employee.first_name + " " + employee.last_name),
-            value: employee.id,
-          })),
-        },
-        {
-          type: "list",
-          name: "role_id",
-          message: "What is the new role of the employee?",
-          choices: roles.map((role) => ({
-            name: role.title,
-            value: role.id,
-          })),
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        // update the role_id of the employee whose first and last name match
-        db.query(
-          "UPDATE employee SET role_id = ? WHERE id = ?",
-          [answers.role_id, answers.employee_id],
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " employee updated!\n");
-
-          }
-        );
-      })
-      .then(() => {
-        console.log("Employee role updated!");
-        menu();
-        })
-        .catch((err) => console.log(err))
-  };
-  questions5();
-});
-});
+      const questions5 = () => {
+        return inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "employee_id",
+              message: "What is the name of the employee?",
+              choices: employees.map((employee) => ({
+                name: employee.first_name + " " + employee.last_name,
+                value: employee.id,
+              })),
+            },
+            {
+              type: "list",
+              name: "role_id",
+              message: "What is the new role of the employee?",
+              choices: roles.map((role) => ({
+                name: role.title,
+                value: role.id,
+              })),
+            },
+          ])
+          .then((answers) => {
+            console.log(answers);
+            // update the role_id of the employee whose first and last name match
+            db.query(
+              "UPDATE employee SET role_id = ? WHERE id = ?",
+              [answers.role_id, answers.employee_id],
+              function (err, res) {
+                if (err) throw err;
+                console.clear();
+                console.log(res.affectedRows + " employee updated!\n");
+              }
+            );
+          })
+          .then(() => {
+            console.log("Employee role updated!");
+            menu();
+          })
+          .catch((err) => console.log(err));
+      };
+      questions5();
+    });
+  });
 }
 
 // TODO: Create a function that will update an employee's manager
@@ -315,77 +310,80 @@ function updateEmployeeManager() {
     const employees = res;
     db.query("SELECT * FROM employee;", function (err, res) {
       if (err) throw err;
-    const managers = res;
+      const managers = res;
 
-  const questions6 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "list",
-          name: "employee_id",
-          message: "What is the name of the employee?",
-          choices: employees.map((employee) => ({
-            name: (employee.first_name + " " + employee.last_name),
-            value: employee.id,
-          })),
-        },
-        {
-          type: "list",
-          name: "manager_id",
-          message: "What is the manager name of the employee?",
-          choices : managers.map((manager) => ({
-            name: (manager.first_name + " " + manager.last_name),
-            value: manager.id,
-          })),
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          "UPDATE employee SET manager_id = ? WHERE id = ?",
-          [answers.manager_id, answers.employee_id],
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " employee updated!\n");
-            // Call deleteProduct AFTER the UPDATE completes
-            // deleteProduct();
- 
-          }
-        );
-      })
-      .then(() => {
-        console.log("Employee manager updated!");
-        menu();
-        })
-        .catch((err) => console.log(err))
-  };
-  questions6();
-});
-});
+      const questions6 = () => {
+        return inquirer
+          .prompt([
+            {
+              type: "list",
+              name: "employee_id",
+              message: "What is the name of the employee?",
+              choices: employees.map((employee) => ({
+                name: employee.first_name + " " + employee.last_name,
+                value: employee.id,
+              })),
+            },
+            {
+              type: "list",
+              name: "manager_id",
+              message: "What is the manager name of the employee?",
+              choices: managers.map((manager) => ({
+                name: manager.first_name + " " + manager.last_name,
+                value: manager.id,
+              })),
+            },
+          ])
+          .then((answers) => {
+            console.log(answers);
+            db.query(
+              "UPDATE employee SET manager_id = ? WHERE id = ?",
+              [answers.manager_id, answers.employee_id],
+              function (err, res) {
+                if (err) throw err;
+                console.clear();
+                console.log(res.affectedRows + " employee updated!\n");
+                // Call deleteProduct AFTER the UPDATE completes
+                // deleteProduct();
+              }
+            );
+          })
+          .then(() => {
+            console.log("Employee manager updated!");
+            menu();
+          })
+          .catch((err) => console.log(err));
+      };
+      questions6();
+    });
+  });
 }
 
 // TODO: Create a function that will view employees by manager
 function viewEmployeesByManager() {
   console.log("Viewing employees by manager");
-  const questions7 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "first_name",
-          message: "What is the first name of the manager?",
-        },
-        {
-          type: "input",
-          name: "last_name",
-          message: "What is the last name of the manager?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          `SELECT 
+  db.query("SELECT * FROM employee;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const managers = res;
+
+    const questions7 = () => {
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "manager_name",
+            message: "What is the name of the manager?",
+            choices: managers.map((manager) => ({
+              name: manager.first_name + " " + manager.last_name,
+              value: [manager.first_name, manager.last_name],
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+          db.query(
+            `SELECT 
         employee.id,
         employee.first_name,
         employee.last_name,
@@ -405,40 +403,50 @@ function viewEmployeesByManager() {
     LEFT JOIN employee as m
         ON employee.manager_id = m.id
     WHERE m.first_name = ? AND m.last_name = ?`,
-          [answers.first_name, answers.last_name],
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.table(res);
-          }
-        );
-      })
-      .then(() => {
-        console.log("--------------------");
-        menu();
+            [answers.manager_name[0], answers.manager_name[1]],
+            function (err, res) {
+              if (err) throw err;
+              console.clear();
+              console.table(res);
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions7();
+        .then(() => {
+          console.log("--------------------");
+          menu();
+        })
+        .catch((err) => console.log(err));
+    };
+    questions7();
+  });
 }
 
 // TODO: Create a function that will view employees by department
 function viewEmployeesByDepartment() {
   console.log("Viewing employees by department");
-  const questions8 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "department_name",
-          message: "What is the name of the department?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        // first db.query gets the department id from the department name
-        db.query(
-          `SELECT employee.id,
+  db.query("SELECT * FROM department;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const departments = res;
+
+    const questions8 = () => {
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "department_name",
+            message: "What is the name of the department?",
+            choices: departments.map((department) => ({
+              name: department.dept_name,
+              value: department.dept_name,
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+          // first db.query gets the department id from the department name
+          db.query(
+            `SELECT employee.id,
         employee.first_name,
         employee.last_name,
         roles.title,
@@ -457,157 +465,186 @@ function viewEmployeesByDepartment() {
         LEFT JOIN employee as m
             ON employee.manager_id = m.id
         WHERE dept_name = ?`,
-          [answers.department_name],
-          function (err, res) {
-            if (err) throw err;
-            // Log all results of the SELECT statement
-            console.clear();
-            console.table(res);
-            // connection.end();
-          }
-        );
-      })
-      .then(() => {
-        console.log("--------------------");
-        menu();
+            [answers.department_name],
+            function (err, res) {
+              if (err) throw err;
+              // Log all results of the SELECT statement
+              console.clear();
+              console.table(res);
+              // connection.end();
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions8();
+        .then(() => {
+          console.log("--------------------");
+          menu();
+        })
+        .catch((err) => console.log(err));
+    };
+    questions8();
+  });
 }
 
 // TODO: Create a function that will delete a department
 function deleteDepartment() {
   console.log("Deleting a department");
-  const questions9 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "name",
-          message: "What is the name of the department?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          "DELETE FROM department WHERE ?",
-          { dept_name: answers.name },
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " department deleted!\n");
-            // Call readProducts AFTER the DELETE completes
-            // readProducts();
-
-          }
-        );
-      })
-      .then(() => {
-        console.log("Department Deleted!");
-        menu();
+  db.query("SELECT * FROM department;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const departments = res;
+    const questions9 = () => {
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "name",
+            message: "What is the name of the department?",
+            choices: departments.map((department) => ({
+              name: department.dept_name,
+              value: department.dept_name,
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+          db.query(
+            "DELETE FROM department WHERE ?",
+            { dept_name: answers.name },
+            function (err, res) {
+              if (err) throw err;
+              console.clear();
+              console.log(res.affectedRows + " department deleted!\n");
+              // Call readProducts AFTER the DELETE completes
+              // readProducts();
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions9();
+        .then(() => {
+          console.log("Department Deleted!");
+          menu();
+        })
+        .catch((err) => console.log(err));
+    };
+    questions9();
+  });
 }
 
 // TODO: Create a function that will delete a role
 function deleteRole() {
   console.log("Deleting a role");
-  const questions10 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "title",
-          message: "What is the title of the role?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          "DELETE FROM roles WHERE ?",
-          { title: answers.title },
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " role deleted!\n");
-            // Call readProducts AFTER the DELETE completes
-            // readProducts();
-
-          }
-        );
-      })
-      .then(() => {
-        console.log("Role Deleted!");
-        menu();
+  db.query("SELECT * FROM roles;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const roles = res;
+    const questions10 = () => {
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "title",
+            message: "What is the title of the role?",
+            choices: roles.map((role) => ({
+              name: role.title,
+              value: role.title,
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+          db.query(
+            "DELETE FROM roles WHERE ?",
+            { title: answers.title },
+            function (err, res) {
+              if (err) throw err;
+              console.clear();
+              console.log(res.affectedRows + " role deleted!\n");
+              // Call readProducts AFTER the DELETE completes
+              // readProducts();
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions10();
+        .then(() => {
+          console.log("Role Deleted!");
+          menu();
+        })
+        .catch((err) => console.log(err));
+    };
+    questions10();
+  });
 }
 // TODO: Create a function that will delete an employee
 function deleteEmployee() {
   console.log("Deleting an employee");
-  const questions11 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "first_name",
-          message: "What is the first name of the employee?",
-        },
-        {
-          type: "input",
-          name: "last_name",
-          message: "What is the last name of the employee?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          "DELETE FROM employee WHERE first_name = ? AND last_name = ?",
-          [answers.first_name, answers.last_name],
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " employee deleted!\n");
-            // Call readProducts AFTER the DELETE completes
-            // readProducts();
-
-          }
-        );
-      })
-      .then(() => {
-        console.log("Employee Deleted!");
-        menu();
+  db.query("SELECT * FROM employee;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const employees = res;
+    const questions11 = () => {
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "employee_name",
+            message: "What is the name of the employee?",
+            choices: employees.map((employee) => ({
+              name: employee.first_name + " " + employee.last_name,
+              value: [employee.first_name, employee.last_name],
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+          db.query(
+            "DELETE FROM employee WHERE first_name = ? AND last_name = ?;",
+            [answers.employee_name[0], answers.employee_name[1]],
+            function (err, res) {
+              if (err) throw err;
+              console.clear();
+              console.log(res.affectedRows + " employee deleted!\n");
+              // Call readProducts AFTER the DELETE completes
+              // readProducts();
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions11();
+        .then(() => {
+          console.log("Employee Deleted!");
+          menu();
+        })
+        .catch((err) => console.log(err));
+    };
+    questions11();
+  });
 }
 
 // TODO: Create a function that will view the total utilized budget of a department
 function viewTotalUtilizedBudget() {
   console.log("Viewing the total utilized budget of a department");
-  // ask the user which department they would like to view the total utilized budget of
-  const questions12 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "department_name",
-          message:
-            "Which department would you like to view the total utilized budget of?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
+  db.query("SELECT * FROM department;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const departments = res;
 
-        // first db.query gets views all employees in the department and then adds up the salaries
-        db.query(
-          `SELECT SUM(salary) as total_budget FROM employee 
+    // ask the user which department they would like to view the total utilized budget of
+    const questions12 = () => {
+      return inquirer
+        .prompt([
+          {
+            type: "list",
+            name: "department_name",
+            message:
+              "Which department would you like to view the total utilized budget of?",
+            choices: departments.map((department) => ({
+              name: department.dept_name,
+              value: department.dept_name,
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+
+          // first db.query gets views all employees in the department and then adds up the salaries
+          db.query(
+            `SELECT SUM(salary) as total_budget FROM employee 
         LEFT JOIN roles
         ON employee.role_id = roles.id
         LEFT JOIN department
@@ -617,42 +654,42 @@ function viewTotalUtilizedBudget() {
         LEFT JOIN employee as m
             ON employee.manager_id = m.id
         WHERE dept_name = ?`,
-          [answers.department_name],
-          function (err, res) {
-            if (err) throw err;
-            // Log all results of the SELECT statement
-            console.clear();
-            console.table(res);
-            // connection.end();
-          }
-        );
-      })
-      .then(() => {
-        console.log("--------------------");
-        menu();
+            [answers.department_name],
+            function (err, res) {
+              if (err) throw err;
+              // Log all results of the SELECT statement
+              console.clear();
+              console.table(res);
+              // connection.end();
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions12();
+        .then(() => {
+          console.log("--------------------");
+          menu();
+        })
+        .catch((err) => console.log(err));
+    };
+    questions12();
+  });
 }
 
 // TODO: Create a function that will use a switch statement to call the appropriate function
 function menu() {
-    // console.clear();
+  // console.clear();
 
-console.log(
+  console.log(
     logo({
-        name: 'Employee Tracker',
-        font: 'Bloody',
-        lineChars: 10,
-        padding: 2,
-        margin: 3,
-        borderColor: 'bold-white',
-        logoColor: 'bold-magenta',
-        textColor: 'green',
-    })
-    .render()
-);
+      name: "Employee Tracker",
+      font: "Bloody",
+      lineChars: 10,
+      padding: 2,
+      margin: 3,
+      borderColor: "bold-white",
+      logoColor: "bold-magenta",
+      textColor: "green",
+    }).render()
+  );
   const questions = () => {
     return inquirer
       .prompt([
@@ -727,20 +764,19 @@ console.log(
           case "View the total utilized budget of a department?":
             viewTotalUtilizedBudget();
             break;
-            case "Exit":
-                db.end();
-                break;
+          case "Exit":
+            db.end();
+            break;
           default:
             console.log("-------------------------");
             break;
-          }
+        }
       });
-    };
-    questions();
-    // make a promise to wait for the user to select an option from the menu
-    // then call questions() again until the user selects the exit option
-    // if the user selects the exit option, then call connection.end()
-    
+  };
+  questions();
+  // make a promise to wait for the user to select an option from the menu
+  // then call questions() again until the user selects the exit option
+  // if the user selects the exit option, then call connection.end()
 }
 
 module.exports = {
