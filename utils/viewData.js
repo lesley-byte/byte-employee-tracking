@@ -113,56 +113,76 @@ function addDepartment() {
 // TODO: Create a function that will add a role to the database
 function addRole() {
   console.log("Adding a role");
-  const questions3 = () => {
-    return inquirer
-      .prompt([
-        {
-          type: "input",
-          name: "title",
-          message: "What is the title of the role?",
-        },
-        {
-          type: "input",
-          name: "salary",
-          message: "What is the salary of the role?",
-        },
-        {
-          type: "input",
-          name: "department_id",
-          message: "What is the department id of the role?",
-        },
-      ])
-      .then((answers) => {
-        console.log(answers);
-        db.query(
-          "INSERT INTO roles SET ?",
+  db.query("SELECT * FROM department;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const departments = res;
+   
+    const questions3 = () => {
+      return inquirer
+        .prompt([
           {
-            title: answers.title,
-            salary: answers.salary,
-            dept_id: answers.department_id,
+            type: "input",
+            name: "title",
+            message: "What is the title of the role?",
           },
-          function (err, res) {
-            if (err) throw err;
-            console.clear();
-            console.log(res.affectedRows + " role inserted!\n");
-            // Call updateProduct AFTER the INSERT completes
-            // updateProduct();
-  
-          }
-        );
-      })
-      .then(() => {
-        console.log("Role added!");
-        menu();
+          {
+            type: "input",
+            name: "salary",
+            message: "What is the salary of the role?",
+          },
+          {
+            type: "list",
+            name: "department_id",
+            message: `What is the name of the department?`,
+            choices: departments.map((department) => ({
+              name: department.dept_name,
+              value: department.id,
+            })),
+          },
+        ])
+        .then((answers) => {
+          console.log(answers);
+          db.query(
+            "INSERT INTO roles SET ?",
+            {
+              title: answers.title,
+              salary: answers.salary,
+              dept_id: answers.department_id,
+            },
+            function (err, res) {
+              if (err) throw err;
+              // console.clear();
+              console.log(res.affectedRows + " role inserted!\n");
+              // Call updateProduct AFTER the INSERT completes
+              // updateProduct();
+    
+            }
+          );
         })
-        .catch((err) => console.log(err))
-  };
-  questions3();
+        .then(() => {
+          console.log("Role added!");
+          menu();
+          })
+          .catch((err) => console.log(err))
+    };
+    questions3();
+  });
 }
 
 // TODO: Create a function that will add an employee to the database
 function addEmployee() {
   console.log("Adding an employee");
+  db.query("SELECT * FROM roles;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const roles = res;
+
+    db.query("SELECT * FROM employee;", function (err, res) {
+      if (err) throw err;
+      // assign the results to a variable that can be used in the inquirer prompt
+      const managers = res;
+
   const questions4 = () => {
     return inquirer
       .prompt([
@@ -177,14 +197,22 @@ function addEmployee() {
           message: "What is the last name of the employee?",
         },
         {
-          type: "input",
+          type: "list",
           name: "role_id",
-          message: "What is the role id of the employee?",
+          message: "What is the role of the employee?",
+          choices: roles.map((role) => ({
+            name: role.title,
+            value: role.id,
+          })),
         },
         {
-          type: "input",
+          type: "list",
           name: "manager_id",
-          message: "What is the manager id of the employee?",
+          message: "Who is the manager of the employee?",
+          choices: managers.map((manager) => ({
+            name: (manager.first_name + " " + manager.last_name),
+            value: manager.id,
+          })),
         },
       ])
       .then((answers) => {
@@ -213,37 +241,52 @@ function addEmployee() {
         })
         .catch((err) => console.log(err))
   };
+  
   questions4();
+});
+});
 }
 
 // TODO: Create a function that will update an employee's role
 function updateEmployeeRole() {
   console.log("Updating an employee's role");
+  db.query("SELECT * FROM employee;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const employees = res;
+    db.query("SELECT * FROM roles;", function (err, res) {
+      if (err) throw err;
+      // assign the results to a variable that can be used in the inquirer prompt
+      const roles = res;
+
   const questions5 = () => {
     return inquirer
       .prompt([
         {
-          type: "input",
-          name: "first_name",
-          message: "What is the first name of the employee?",
+          type: "list",
+          name: "employee_id",
+          message: "What is the name of the employee?",
+          choices: employees.map((employee) => ({
+            name: (employee.first_name + " " + employee.last_name),
+            value: employee.id,
+          })),
         },
         {
-          type: "input",
-          name: "last_name",
-          message: "What is the last name of the employee?",
-        },
-        {
-          type: "input",
+          type: "list",
           name: "role_id",
-          message: "What is the new role id of the employee?",
+          message: "What is the new role of the employee?",
+          choices: roles.map((role) => ({
+            name: role.title,
+            value: role.id,
+          })),
         },
       ])
       .then((answers) => {
         console.log(answers);
         // update the role_id of the employee whose first and last name match
         db.query(
-          "UPDATE employee SET role_id = ? WHERE first_name = ? AND last_name = ?",
-          [answers.role_id, answers.first_name, answers.last_name],
+          "UPDATE employee SET role_id = ? WHERE id = ?",
+          [answers.role_id, answers.employee_id],
           function (err, res) {
             if (err) throw err;
             console.clear();
@@ -259,35 +302,48 @@ function updateEmployeeRole() {
         .catch((err) => console.log(err))
   };
   questions5();
+});
+});
 }
 
 // TODO: Create a function that will update an employee's manager
 function updateEmployeeManager() {
   console.log("Updating an employee's manager");
+  db.query("SELECT * FROM employee;", function (err, res) {
+    if (err) throw err;
+    // assign the results to a variable that can be used in the inquirer prompt
+    const employees = res;
+    db.query("SELECT * FROM employee;", function (err, res) {
+      if (err) throw err;
+    const managers = res;
+
   const questions6 = () => {
     return inquirer
       .prompt([
         {
-          type: "input",
-          name: "first_name",
-          message: "What is the first name of the employee?",
+          type: "list",
+          name: "employee_id",
+          message: "What is the name of the employee?",
+          choices: employees.map((employee) => ({
+            name: (employee.first_name + " " + employee.last_name),
+            value: employee.id,
+          })),
         },
         {
-          type: "input",
-          name: "last_name",
-          message: "What is the last name of the employee?",
-        },
-        {
-          type: "input",
+          type: "list",
           name: "manager_id",
-          message: "What is the manager id of the employee?",
+          message: "What is the manager name of the employee?",
+          choices : managers.map((manager) => ({
+            name: (manager.first_name + " " + manager.last_name),
+            value: manager.id,
+          })),
         },
       ])
       .then((answers) => {
         console.log(answers);
         db.query(
-          "UPDATE employee SET manager_id = ? WHERE first_name = ? AND last_name = ?",
-          [answers.manager_id, answers.first_name, answers.last_name],
+          "UPDATE employee SET manager_id = ? WHERE id = ?",
+          [answers.manager_id, answers.employee_id],
           function (err, res) {
             if (err) throw err;
             console.clear();
@@ -305,6 +361,8 @@ function updateEmployeeManager() {
         .catch((err) => console.log(err))
   };
   questions6();
+});
+});
 }
 
 // TODO: Create a function that will view employees by manager
