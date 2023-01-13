@@ -1,14 +1,10 @@
-const express = require("express");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const logo = require('asciiart-logo');
 // const artConfig = require('./package.json');
 const PORT = process.env.PORT || 3001;
-const app = express();
 
-// Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+
 const db = mysql.createConnection(
   {
     host: "localhost",
@@ -20,13 +16,13 @@ const db = mysql.createConnection(
   },
   console.log(`Connected to the employees_db database.`)
 );
-app.use((req, res) => {
-  res.status(404).end();
-});
+// app.use((req, res) => {
+//   res.status(404).end();
+// });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 
 // TODO: Create a function that will console.table the data from all departments
 function viewAllDepartments() {
@@ -107,6 +103,7 @@ function addDepartment() {
       })
       .then(() => {
         console.log("Department added!");
+        menu();
         })
         .catch((err) => console.log(err))
   };
@@ -153,7 +150,12 @@ function addRole() {
   
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Role added!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions3();
 }
@@ -204,7 +206,12 @@ function addEmployee() {
 
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Employee added!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions4();
 }
@@ -244,7 +251,12 @@ function updateEmployeeRole() {
 
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Employee role updated!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions5();
 }
@@ -285,7 +297,12 @@ function updateEmployeeManager() {
  
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Employee manager updated!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions6();
 }
@@ -337,7 +354,12 @@ function viewEmployeesByManager() {
             console.table(res);
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("--------------------");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions7();
 }
@@ -386,7 +408,12 @@ function viewEmployeesByDepartment() {
             // connection.end();
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("--------------------");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions8();
 }
@@ -417,7 +444,12 @@ function deleteDepartment() {
 
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Department Deleted!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions9();
 }
@@ -448,7 +480,12 @@ function deleteRole() {
 
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Role Deleted!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions10();
 }
@@ -483,7 +520,12 @@ function deleteEmployee() {
 
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("Employee Deleted!");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions11();
 }
@@ -526,14 +568,19 @@ function viewTotalUtilizedBudget() {
             // connection.end();
           }
         );
-      });
+      })
+      .then(() => {
+        console.log("--------------------");
+        menu();
+        })
+        .catch((err) => console.log(err))
   };
   questions12();
 }
 
 // TODO: Create a function that will use a switch statement to call the appropriate function
 function menu() {
-    console.clear();
+    // console.clear();
 
 console.log(
     logo({
@@ -576,16 +623,18 @@ console.log(
       ])
       .then((data) => {
         console.log(data.menu);
-        let running = false;
         switch (data.menu) {
           case "View all departments?":
             viewAllDepartments();
+            menu();
             break;
           case "View all roles?":
             viewAllRoles();
+            menu();
             break;
           case "View all employees?":
             viewAllEmployees();
+            menu();
             break;
           case "Add a department?":
             addDepartment();
@@ -626,7 +675,7 @@ console.log(
           default:
             console.log("-------------------------");
             break;
-        }
+          }
       });
     };
     questions();
